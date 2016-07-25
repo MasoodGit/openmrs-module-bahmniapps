@@ -220,7 +220,7 @@ describe('CreatePatientController', function() {
     });
 
     it("should set patient identifierPrefix details with the matching one", function() {
-        rootScopeMock.patientConfiguration.identifierSources = [{
+        rootScopeMock.patientConfiguration.identifierTypes = [{
             prefix: "GAN"
         }, {
             prefix: "SEM"
@@ -243,7 +243,7 @@ describe('CreatePatientController', function() {
     });
 
     it("should set patient identifierPrefix details with the first source details when it doesn't match", function() {
-        rootScopeMock.patientConfiguration.identifierSources = [{
+        rootScopeMock.patientConfiguration.identifierTypes = [{
             prefix: "SEM"
         }, {
             prefix: "BAN"
@@ -445,18 +445,18 @@ describe('CreatePatientController', function() {
     });
 
     it("hasIdentifierSources, should return false if identifier sources are not present", function() {
-        scopeMock.identifierSources = [];
+        scopeMock.identifierTypes = [];
         expect(scopeMock.hasIdentifierSources()).toBeFalsy();
     });
 
     it("should return true if there is only one identifier source with blank prefix", function () {
-        scopeMock.identifierSources = [{name : "ABC", prefix: ""}];
+        scopeMock.identifierTypes = [{name : "ABC", prefix: ""}];
         expect(scopeMock.hasIdentifierSourceWithEmptyPrefix()).toBeTruthy();
     });
 
 
     it("should return false if there is only one identifier source without a blank prefix", function () {
-        scopeMock.identifierSources = [{name : "ABC", prefix: "prefix"}];
+        scopeMock.identifierTypes = [{name : "ABC", prefix: "prefix"}];
         expect(scopeMock.hasIdentifierSourceWithEmptyPrefix()).toBeFalsy();
     });
 });

@@ -5,7 +5,7 @@ angular.module('bahmni.registration')
         'messagingService', '$translate', '$filter',
         function ($rootScope, $scope, $location, $window, spinner, patientService, appService, preferences, messagingService, $translate,$filter) {
 
-            $scope.identifierSources = $rootScope.patientConfiguration.identifierSources;
+            $scope.identifierTypes = $rootScope.patientConfiguration.identifierTypes;
             $scope.results = [];
             var searching = false;
             var maxAttributesFromConfig = 5;
@@ -49,12 +49,12 @@ angular.module('bahmni.registration')
                 if (!identifierPrefix || identifierPrefix.length === 0) {
                     identifierPrefix = preferences.identifierPrefix;
                 }
-                $scope.identifierSources.forEach(function (identifierSource) {
+                $scope.identifierTypes.forEach(function (identifierSource) {
                     if (identifierPrefix === identifierSource.prefix) {
                         $scope.searchParameters.identifierPrefix = identifierSource;
                     }
                 });
-                $scope.searchParameters.identifierPrefix = $scope.searchParameters.identifierPrefix || $scope.identifierSources[0];
+                $scope.searchParameters.identifierPrefix = $scope.searchParameters.identifierPrefix || $scope.identifierTypes[0];
 
                 $scope.searchParameters.registrationNumber = searchParameters.registrationNumber || "";
                 if (hasSearchParameters()) {
@@ -399,11 +399,11 @@ angular.module('bahmni.registration')
             }
 
             $scope.hasIdentifierSources = function(){
-                return $scope.identifierSources.length > 0;
+                return $scope.identifierTypes.length > 0;
             };
 
             $scope.hasIdentifierSourceWithEmptyPrefix = function () {
-                var identifierSources = $scope.identifierSources;
+                var identifierSources = $scope.identifierTypes;
                 return identifierSources.length === 1 && identifierSources[0].prefix === "";
             }
         }]);

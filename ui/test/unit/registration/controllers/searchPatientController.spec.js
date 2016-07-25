@@ -28,7 +28,7 @@ describe('SearchPatientController', function () {
         rootScope.patientConfiguration = {};
         rootScope.currentUser = { privileges: [{name: 'View Patients'}] };
         rootScope.addressLevels = [{ "addressField" : "stateProvince" ,name: "State"}];
-        rootScope.patientConfiguration.identifierSources = [
+        rootScope.patientConfiguration.identifierTypes = [
             {name: 'GAN', prefix: 'GAN'},
             {name: 'SEM', prefix: 'SEM'},
             {name: 'SIV', prefix: 'SIV'},
