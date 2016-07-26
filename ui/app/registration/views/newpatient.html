@@ -14,47 +14,7 @@
                     </div>
                 </section>
                 <section ng-if="!isOffline()">
-                    <article ng-repeat="identifier in patient.identifiers" class="form-field existing-patient">
-                        <div class="field-attribute">
-                            <label class="control-label" for="patientID">{{::'REGISTRATION_LABEL_PATIENT_IDENTIFIER' | translate}} {{:: identifier.identifierType.name}}
-                                <span ng-show="::!hasIdentifierSources(identifier.identifierType)" class="asterick">*</span>
-                            </label>
-                        </div>
-                        <div ng-show="::(hasIdentifierSources(identifier.identifierType) && !hasIdentifierSourceWithEmptyPrefix(identifier.identifierType))" class="field-value" id="patientID">
-                            <select id="identifierPrefix" ng-model="identifier.selectedIdentifierSource"
-                                    ng-options="identifierSource.prefix for identifierSource in ::identifier.identifierType.identifierSources" ng-change="patient.generateIdentifier(identifier)"
-                                    required>
-                            </select>
-                        </div>
-                        <div class="field-value showOn-desktop-registration">
-                            <input type="text" id="registrationNumber" ng-model="identifier.registrationNumber"
-                                   placeholder="{{ ::'REGISTRATION_LABEL_NUMBER' | translate}}" non-blank="patient.hasOldIdentifier || !hasIdentifierSources(identifier.identifierType)" pattern-validate
-                                   ng-change="patient.generateIdentifier(identifier)" ng-show="patient.hasOldIdentifier || !hasIdentifierSources(identifier.identifierType)" focus-on="hasOldIdentifier">
-                            <div ng-show="::hasIdentifierSources(identifier.identifierType)" class="fl">
-                                <div class="field-attribute hasOldIdentifier-field-attribute">
-                                    <label for="hasOldIdentifier" class="control-label">{{::'REGISTRATION_LABEL_ENTER_ID' | translate}}</label>
-                                </div>
-                                <div class="field-value">
-                                    <input class="input-label-inline" ng-show="::showEnterID" type="checkbox" id="hasOldIdentifier" ng-model="patient.hasOldIdentifier"
-                                           ng-change="patient.clearRegistrationNumber(identifier)">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field-value showOn-small-screen-registration">
-                            <div ng-show="::hasIdentifierSources(identifier.identifierType)" class="patientExistingIdentifier">
-                                <div class="field-attribute hasOldIdentifier-field-attribute">
-                                    <label for="hasOldIdentifier" class="control-label">{{::'REGISTRATION_LABEL_ENTER_ID' | translate}}</label>
-                                </div>
-                                <div class="field-value">
-                                    <input class="input-label-inline" ng-show="::showEnterID" type="checkbox" id="::hasOldIdentifier" ng-model="$parent.hasOldIdentifier"
-                                           ng-change="patient.clearRegistrationNumber(identifier)">
-                                </div>
-                            </div>
-                            <input ng-class="hasIdentifierSources(identifier.identifierType)? 'registrationNumber-Mobile' : ''" type="text" id="registrationNumber" ng-model="identifier.registrationNumber"
-                                   placeholder="Registration Number" non-blank="hasOldIdentifier" pattern-validate
-                                   ng-change="patient.generateIdentifier(identifier)" ng-show="hasOldIdentifier || !hasIdentifierSources(identifier.identifierType)" focus-on="hasOldIdentifier">
-                        </div>
-                    </article>
+                    <div ng-include="'views/patientIdentifiers.html'"></div>
                 </section>
             </div>
             <div ng-include="'views/patientcommon.html'"></div>

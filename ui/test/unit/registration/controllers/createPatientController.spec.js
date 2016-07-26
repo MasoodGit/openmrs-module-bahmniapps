@@ -32,10 +32,13 @@ describe('CreatePatientController', function() {
         spinnerMock.forPromise.and.returnValue(specUtil.createFakePromise({}));
 
         rootScopeMock.patientConfiguration = {
-            identifierSources: [{
-                prefix: "SEM"
-            }, {
-                prefix: "GAN"
+            identifierTypes: [{
+                primary: true,
+                identifierSources: [{
+                    prefix: "SEM"
+                }, {
+                    prefix: "GAN"
+                }]
             }]
         };
 
@@ -221,9 +224,13 @@ describe('CreatePatientController', function() {
 
     it("should set patient identifierPrefix details with the matching one", function() {
         rootScopeMock.patientConfiguration.identifierTypes = [{
-            prefix: "GAN"
-        }, {
-            prefix: "SEM"
+            primary: true,
+            uuid: "identifier-type-uuid",
+            identifierSources: [{
+                prefix: "GAN"
+            }, {
+                prefix: "SEM"
+            }]
         }];
         preferencesMock.identifierPrefix = "GAN";
         $aController('CreatePatientController', {
@@ -239,14 +246,18 @@ describe('CreatePatientController', function() {
             offlineService: {}
         });
 
-        expect(scopeMock.patient.identifierPrefix.prefix).toBe("GAN");
+        expect(scopeMock.patient.identifiers[0].selectedIdentifierSource.prefix).toBe("GAN");
     });
 
     it("should set patient identifierPrefix details with the first source details when it doesn't match", function() {
         rootScopeMock.patientConfiguration.identifierTypes = [{
-            prefix: "SEM"
-        }, {
-            prefix: "BAN"
+            primary: true,
+            uuid: "identifier-type-uuid",
+            identifierSources: [{
+                prefix: "SEM"
+            }, {
+                prefix: "BAN"
+            }]
         }];
         preferencesMock.identifierPrefix = "GAN";
         $aController('CreatePatientController', {
@@ -262,7 +273,7 @@ describe('CreatePatientController', function() {
             offlineService: {}
         });
 
-        expect(scopeMock.patient.identifierPrefix.prefix).toBe("SEM");
+        expect(scopeMock.patient.identifiers[0].selectedIdentifierSource.prefix).toBe("SEM");
     });
 
     it("should create a patient and go to edit page", function() {
@@ -445,18 +456,18 @@ describe('CreatePatientController', function() {
     });
 
     it("hasIdentifierSources, should return false if identifier sources are not present", function() {
-        scopeMock.identifierTypes = [];
-        expect(scopeMock.hasIdentifierSources()).toBeFalsy();
+        var identifierType ={identifierSources: []};
+        expect(scopeMock.hasIdentifierSources(identifierType)).toBeFalsy();
     });
 
     it("should return true if there is only one identifier source with blank prefix", function () {
-        scopeMock.identifierTypes = [{name : "ABC", prefix: ""}];
-        expect(scopeMock.hasIdentifierSourceWithEmptyPrefix()).toBeTruthy();
+        var identifierType = {identifierSources: [{name : "ABC", prefix: ""}]};
+        expect(scopeMock.hasIdentifierSourceWithEmptyPrefix(identifierType)).toBeTruthy();
     });
 
 
     it("should return false if there is only one identifier source without a blank prefix", function () {
-        scopeMock.identifierTypes = [{name : "ABC", prefix: "prefix"}];
-        expect(scopeMock.hasIdentifierSourceWithEmptyPrefix()).toBeFalsy();
+        var identifierType = {identifierSources: [{name : "ABC", prefix: "prefix"}]};
+        expect(scopeMock.hasIdentifierSourceWithEmptyPrefix(identifierType)).toBeFalsy();
     });
 });

@@ -79,11 +79,14 @@ angular.module('bahmni.registration')
                 $scope.patient = patientModel.create($rootScope.patientConfiguration.identifierTypes);
                 $scope.identifierTypes = $rootScope.patientConfiguration.identifierTypes;
                 var primaryIdentifier = _.find($scope.patient.identifiers, {identifierType: {primary: true}});
-                var identifierPrefix = _.find(primaryIdentifier.identifierType.identifierSources, {
+                primaryIdentifier.selectedIdentifierSource = _.find(primaryIdentifier.identifierType.identifierSources, {
                     prefix: preferences.identifierPrefix
                 });
-                primaryIdentifier.selectedIdentifierSource = identifierPrefix || primaryIdentifier.identifierType.identifierSources[0];
-                $scope.patient.hasOldIdentifier = preferences.hasOldIdentifier;
+
+                _.each($scope.patient.identifiers, function(identifier){
+                    identifier.selectedIdentifierSource = identifier.selectedIdentifierSource || identifier.identifierType.identifierSources[0];
+                });
+                primaryIdentifier.hasOldIdentifier = preferences.hasOldIdentifier;
                 prepopulateDefaultsInFields();
                 buildSectionVisibilityMap();
 

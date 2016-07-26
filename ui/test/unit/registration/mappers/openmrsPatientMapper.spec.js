@@ -104,7 +104,7 @@ describe('patientMapper', function () {
         expect(patient.gender).toBe(openmrsPatient.patient.person.gender);
         expect(patient.bloodGroup).toBe(openmrsPatient.patient.person.bloodGroup);
         expect(patient.age).toBe(age);
-        expect(patient.identifier).toBe(openmrsPatient.patient.identifiers[0].identifier);
+        expect(patient.identifiers).toBe(openmrsPatient.patient.identifiers);
         expect(patient.address.address1).toBe(openmrsPatient.patient.person.preferredAddress.address1);
         expect(patient.address.address2).toBe(openmrsPatient.patient.person.preferredAddress.address2);
         expect(patient.address.address3).toBe(openmrsPatient.patient.person.preferredAddress.address3);
@@ -174,4 +174,8 @@ describe('patientMapper', function () {
         });
         mapper.map(openmrsPatient);
     });
+    
+    it('should match identifierSource with longest prefix', function(){
+        
+    })
 });

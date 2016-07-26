@@ -7,12 +7,17 @@ Bahmni.Registration.CreatePatientRequestMapper = (function () {
 
     CreatePatientRequestMapper.prototype.mapFromPatient = function (patientAttributeTypes, patient) {
         var constants = Bahmni.Registration.Constants;
-        var identifiers = _.map(patient.identifiers, function(identifier){
+        var identifiers = _.filter(patient.identifiers, function (identifier) {
+            return !_.isEmpty(identifier.selectedIdentifierSource) || (identifier.identifier !== undefined);
+        });
+        identifiers = _.map(identifiers, function(identifier){
             return {
                 identifier: identifier.identifier,
                 identifierSourceUuid: identifier.selectedIdentifierSource? identifier.selectedIdentifierSource.uuid : undefined,
                 identifierPrefix: identifier.selectedIdentifierSource? identifier.selectedIdentifierSource.prefix : undefined,
-                identifierType: identifier.identifierType.uuid
+                identifierType: identifier.identifierType.uuid,
+                preferred: identifier.preferred,
+                voided: identifier.voided
             }
         });
         var openMRSPatient = {

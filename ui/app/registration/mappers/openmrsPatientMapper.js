@@ -34,6 +34,29 @@ angular.module('bahmni.registration').factory('openmrsPatientMapper', ['patient'
                 patient.relationships = relationships || [];
                 patient.newlyAddedRelationships = [{}];
             },
+
+            mapIdentifiers = function (patient, identifiers) {
+                patient.identifiers = identifiers;
+                _.each(patient.identifiers, function(identifier){
+                    _.assign(identifier.identifierType, _.find($rootScope.patientConfiguration.identifierTypes, {uuid: identifier.identifierType.uuid}));
+                    var reversedIdentifier = identifier.identifier.split('').reverse().join('');
+                    var matchedIndex = reversedIdentifier.length;
+                    var matchedIdentifierSource;
+                    _.each(identifier.identifierType.identifierSources, function (source) {
+                        if(source.prefix){
+                            var reversedPrefix = source.prefix.split('').reverse().join('');
+                            var index = reversedIdentifier.lastIndexOf(reversedPrefix);
+                            if(index !== -1 && index < matchedIndex){
+                                matchedIdentifierSource = source;
+                                matchedIndex = index;
+                            }
+                        }
+                    });
+                    identifier.selectedIdentifierSource = matchedIdentifierSource;
+                    identifier.registrationNumber = matchedIdentifierSource? identifier.identifier.split(matchedIdentifierSource.prefix)[1]: identifier.identifier;
+                })
+            },
+
             map = function (openmrsPatient) {
                 var relationships = openmrsPatient.relationships;
                 openmrsPatient = openmrsPatient.patient;
@@ -49,7 +72,6 @@ angular.module('bahmni.registration').factory('openmrsPatientMapper', ['patient'
                 patient.gender = openmrsPerson.gender;
                 patient.address = mapAddress(openmrsPerson.preferredAddress);
                 patient.birthtime = parseDate(openmrsPerson.birthtime);
-                patient.identifiers = openmrsPatient.identifiers;
                 patient.image = Bahmni.Registration.Constants.patientImageURL + openmrsPatient.uuid + ".jpeg?q=" + new Date().toISOString();
                 patient.registrationDate =  Bahmni.Common.Util.DateUtil.parse(openmrsPerson.auditInfo.dateCreated);
                 patient.dead = openmrsPerson.dead;
@@ -59,6 +81,7 @@ angular.module('bahmni.registration').factory('openmrsPatientMapper', ['patient'
                 patient.bloodGroup = openmrsPerson.bloodGroup;
                 mapAttributes(patient, openmrsPerson.attributes);
                 mapRelationships(patient, relationships);
+                mapIdentifiers(patient, openmrsPatient.identifiers);
                 return patient;
             };
 

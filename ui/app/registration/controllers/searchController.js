@@ -6,6 +6,7 @@ angular.module('bahmni.registration')
         function ($rootScope, $scope, $location, $window, spinner, patientService, appService, preferences, messagingService, $translate,$filter) {
 
             $scope.identifierTypes = $rootScope.patientConfiguration.identifierTypes;
+            $scope.identifierSources = _.flatten(_.map($scope.identifierTypes,"identifierSources"));
             $scope.results = [];
             var searching = false;
             var maxAttributesFromConfig = 5;
@@ -49,7 +50,7 @@ angular.module('bahmni.registration')
                 if (!identifierPrefix || identifierPrefix.length === 0) {
                     identifierPrefix = preferences.identifierPrefix;
                 }
-                $scope.identifierTypes.forEach(function (identifierSource) {
+                $scope.identifierSources.forEach(function (identifierSource) {
                     if (identifierPrefix === identifierSource.prefix) {
                         $scope.searchParameters.identifierPrefix = identifierSource;
                     }
@@ -399,11 +400,11 @@ angular.module('bahmni.registration')
             }
 
             $scope.hasIdentifierSources = function(){
-                return $scope.identifierTypes.length > 0;
+                return $scope.identifierSources.length > 0;
             };
 
             $scope.hasIdentifierSourceWithEmptyPrefix = function () {
-                var identifierSources = $scope.identifierTypes;
+                var identifierSources = $scope.identifierSources;
                 return identifierSources.length === 1 && identifierSources[0].prefix === "";
             }
         }]);

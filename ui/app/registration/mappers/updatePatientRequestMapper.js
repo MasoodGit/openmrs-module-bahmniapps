@@ -33,6 +33,17 @@ Bahmni.Registration.UpdatePatientRequestMapper = (function () {
             }
         };
 
+        openMRSPatientProfile.patient.identifiers = _.map(patient.identifiers, function(identifier){
+            return {
+                identifier: identifier.identifier,
+                identifierSourceUuid: identifier.selectedIdentifierSource? identifier.selectedIdentifierSource.uuid : undefined,
+                identifierPrefix: identifier.selectedIdentifierSource? identifier.selectedIdentifierSource.prefix : undefined,
+                identifierType: identifier.identifierType.uuid,
+                preferred: identifier.preferred,
+                voided: identifier.voided
+            }
+        });
+
         this.setImage(patient, openMRSPatientProfile);
 
         if(patient.relationships) {
